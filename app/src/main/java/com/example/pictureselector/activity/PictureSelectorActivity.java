@@ -1,6 +1,7 @@
 package com.example.pictureselector.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pictureselector.R;
-import com.example.pictureselector.adapter.ImagePickAdapter;
+import com.example.pictureselector.adapter.PictureSelectorAdapter;
 import com.example.pictureselector.manage.ConfigManage;
 import com.example.pictureselector.media.MediaFile;
 import com.example.pictureselector.scanner.ImageScanner;
@@ -43,15 +44,15 @@ public class PictureSelectorActivity extends BaseActivity {
     @BindView(R.id.rv_list)
     RecyclerView rv_list;
     GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
-    ImagePickAdapter adapter = new ImagePickAdapter(this);
+    PictureSelectorAdapter adapter = new PictureSelectorAdapter(this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_selector);
         ButterKnife.bind(this);
-        checkPermission();
         initView();
+        checkPermission();
     }
 
     private void initView() {
@@ -74,6 +75,13 @@ public class PictureSelectorActivity extends BaseActivity {
         //设置划出屏幕后的缓存数
         rv_list.setItemViewCacheSize(60);
 
+        tv_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+            }
+        });
+
     }
 
     private void initData() {
@@ -95,6 +103,13 @@ public class PictureSelectorActivity extends BaseActivity {
 
     }
 
+    /**
+     * 请求权限的回调
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {

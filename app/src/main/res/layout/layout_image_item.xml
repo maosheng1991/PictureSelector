@@ -14,11 +14,11 @@
 
     <ImageView
         android:id="@+id/iv_item_check"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:padding="5dp"
+        android:padding="2dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/icon_image_checked" />
 

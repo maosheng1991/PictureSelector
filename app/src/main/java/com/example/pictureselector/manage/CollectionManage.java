@@ -35,4 +35,24 @@ public class CollectionManage {
     public void setList(List<String> list) {
         this.list = list;
     }
+
+    /**
+     * 添加文件路径到集合
+     *
+     * @param path
+     * @return
+     */
+    public boolean addFilePathToCollect(String path) {
+        return list.add(path);
+    }
+
+    /**
+     * 从集合中删除指定的文件路径
+     *
+     * @param path
+     * @return
+     */
+    public boolean deletePathFromCollect(String path) {
+        return list.remove(path);
+    }
 }

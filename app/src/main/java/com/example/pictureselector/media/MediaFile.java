@@ -14,6 +14,7 @@ public class MediaFile {
     private String folderName;//文件夹名称
     private long duration;//视频文件的持续时间
     private long dateToken;//自1970年1月1日以来的毫秒数
+    private boolean isCheck = false;//是否被点击
 
     public MediaFile() {
 
@@ -65,5 +66,13 @@ public class MediaFile {
 
     public void setDateToken(long dateToken) {
         this.dateToken = dateToken;
+    }
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
     }
 }
