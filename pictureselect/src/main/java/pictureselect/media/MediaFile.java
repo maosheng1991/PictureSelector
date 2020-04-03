@@ -6,7 +6,7 @@ package pictureselect.media;
  * @Author ytf
  * CreateDate    2020/4/1 9:44
  */
-public class MediaFile {
+public class MediaFile implements Comparable<MediaFile> {
 
     private String path;//路径
     private String mime;//文件类型
@@ -74,5 +74,10 @@ public class MediaFile {
 
     public void setCheck(boolean check) {
         isCheck = check;
+    }
+
+    @Override
+    public int compareTo(MediaFile o) {
+        return (int) (o.getDateToken() - this.dateToken);
     }
 }

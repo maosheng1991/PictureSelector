@@ -52,7 +52,10 @@ public class MainActivity extends AppCompatActivity {
         tv_picture_selector.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                PictureSelector.getInstance().start(MainActivity.this, REQUEST_SELECTOR);
+                PictureSelector.getInstance()
+                        .setShowImage(false)
+                        .setShowVideo(false)
+                        .start(MainActivity.this, REQUEST_SELECTOR);
                 return false;
             }
         });

@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telecom.Call;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,7 +18,7 @@ import android.widget.TextView;
 
 import com.example.pictureselect.R;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import pictureselect.PictureSelector;
@@ -26,6 +27,10 @@ import pictureselect.manage.CollectionManage;
 import pictureselect.manage.ConfigManage;
 import pictureselect.media.MediaFile;
 import pictureselect.scanner.ImageScanner;
+import pictureselect.task.LoadAllTask;
+import pictureselect.task.LoadImageTask;
+import pictureselect.task.LoadVideoTask;
+import pictureselect.task.MediaCallBack;
 
 /**
  * @ClassName PictureSelectorActivity
@@ -43,6 +48,13 @@ public class PictureSelectorActivity extends BaseActivity {
     private TextView tv_confirm;
     private RecyclerView rv_list;
 
+    /**
+     * 参数
+     */
+    private boolean showImage;
+    private boolean showVideo;
+
+
     GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
     PictureSelectorAdapter adapter = new PictureSelectorAdapter(this);
 
@@ -55,6 +67,10 @@ public class PictureSelectorActivity extends BaseActivity {
     }
 
     private void initView() {
+
+        showImage = ConfigManage.getInstance().isShowImage();
+        showVideo = ConfigManage.getInstance().isShowVideo();
+
         iv_left = findViewById(R.id.iv_left);
         tv_title = findViewById(R.id.tv_title);
         tv_confirm = findViewById(R.id.tv_confirm);
@@ -87,9 +103,23 @@ public class PictureSelectorActivity extends BaseActivity {
 
     }
 
+    /**
+     * 获取数据
+     */
     private void initData() {
-        List<MediaFile> list = new ImageScanner(this).scanner();
-        adapter.setMediaFiles(list);
+
+        Runnable runnableTask = null;
+
+        if (showImage && !showVideo)//只加载图片
+            runnableTask = new LoadImageTask(this, new CallBackData());
+
+        if (showVideo && !showImage)//只加载视频
+            runnableTask = new LoadVideoTask(this, new CallBackData());
+
+        if (runnableTask == null)//全部加载
+            runnableTask = new LoadAllTask(this, new CallBackData());
+
+        new Thread(runnableTask).start();
     }
 
     /**
@@ -105,6 +135,23 @@ public class PictureSelectorActivity extends BaseActivity {
         }
 
     }
+
+    /**
+     * 返回数据的接口
+     */
+    class CallBackData implements MediaCallBack {
+
+        @Override
+        public void resultArrayList(final ArrayList<MediaFile> list) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.setMediaFiles(list);
+                }
+            });
+        }
+    }
+
 
     /**
      * 请求权限的回调
