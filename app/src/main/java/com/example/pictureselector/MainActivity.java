@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.pictureselector.adapter.MainAdapter;
 
 import java.util.ArrayList;
 
@@ -28,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     TextView tv_picture_selector;
     @BindView(R.id.rv_list)
     RecyclerView rv_list;
+
+    MainAdapter mainAdapter = new MainAdapter(this);
+    LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
     ArrayList<String> arrayList = new ArrayList<>();
 
@@ -49,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        rv_list.setAdapter(mainAdapter);
+        rv_list.setLayoutManager(layout);
     }
 
 
@@ -67,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
             /*if (arrayList == null)
                 arrayList = CollectionManage.getInstance().getArrayList();*/
 
-            if (arrayList.size() != 0) {
-
+            if (arrayList != null) {
+                mainAdapter.setArrayList(arrayList);
             }
 
 

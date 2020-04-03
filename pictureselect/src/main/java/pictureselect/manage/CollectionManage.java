@@ -68,4 +68,11 @@ public class CollectionManage {
         }
         return arrayList;
     }
+
+    /**
+     * 清除整个list
+     */
+    public void cleanArrayList() {
+        list.clear();
+    }
 }

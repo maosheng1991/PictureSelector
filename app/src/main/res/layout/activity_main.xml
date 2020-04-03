@@ -6,14 +6,15 @@
     android:background="@color/black"
     tools:context=".MainActivity">
 
+
     <TextView
         android:id="@+id/tv_picture_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:padding="5dp"
         android:background="@drawable/confirm_background"
+        android:padding="5dp"
         android:text="点击进入图片选择器"
         android:textColor="@color/white_m"
         android:textSize="16dp" />

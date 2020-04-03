@@ -11,13 +11,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pictureselect.R;
 
+import java.util.Collections;
 import java.util.List;
 
 import pictureselect.PictureSelector;
@@ -60,11 +60,10 @@ public class PictureSelectorActivity extends BaseActivity {
         tv_confirm = findViewById(R.id.tv_confirm);
         rv_list = findViewById(R.id.rv_list);
 
-        iv_left.setOnTouchListener(new View.OnTouchListener() {
+        iv_left.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 finish();
-                return true;
             }
         });
         String title = "";
@@ -135,5 +134,11 @@ public class PictureSelectorActivity extends BaseActivity {
         intent.putStringArrayListExtra(PictureSelector.SELECT_ITEM, CollectionManage.getInstance().getArrayList());
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CollectionManage.getInstance().cleanArrayList();
     }
 }
