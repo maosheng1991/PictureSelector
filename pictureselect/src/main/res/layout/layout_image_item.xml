@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="1dp">
+
+    <pictureselect.view.SquareImageView
+        android:id="@+id/iv_content"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/icon_image_default" />
+
+    <ImageView
+        android:id="@+id/iv_item_check"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:padding="2dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/icon_image_checked" />
+
+</RelativeLayout>

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">图片选择器</string>
+    <string name="confirm">确定</string>
+    <string name="title">选择</string>
+</resources>
