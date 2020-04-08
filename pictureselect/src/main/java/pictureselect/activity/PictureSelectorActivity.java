@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telecom.Call;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,14 +18,12 @@ import android.widget.TextView;
 import com.example.pictureselect.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import pictureselect.PictureSelector;
 import pictureselect.adapter.PictureSelectorAdapter;
 import pictureselect.manage.CollectionManage;
 import pictureselect.manage.ConfigManage;
 import pictureselect.media.MediaFile;
-import pictureselect.scanner.ImageScanner;
 import pictureselect.task.LoadAllTask;
 import pictureselect.task.LoadImageTask;
 import pictureselect.task.LoadVideoTask;
@@ -53,6 +50,9 @@ public class PictureSelectorActivity extends BaseActivity {
      */
     private boolean showImage;
     private boolean showVideo;
+    private int maxCount;
+    private String title;
+    private int optionalCount;//本次可选的个数
 
 
     GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
@@ -70,11 +70,16 @@ public class PictureSelectorActivity extends BaseActivity {
 
         showImage = ConfigManage.getInstance().isShowImage();
         showVideo = ConfigManage.getInstance().isShowVideo();
+        maxCount = ConfigManage.getInstance().getMaxCount();
+        title = ConfigManage.getInstance().getTitle();
+        optionalCount = maxCount - CollectionManage.getInstance().getArrayList().size();
 
         iv_left = findViewById(R.id.iv_left);
         tv_title = findViewById(R.id.tv_title);
         tv_confirm = findViewById(R.id.tv_confirm);
         rv_list = findViewById(R.id.rv_list);
+
+        tv_confirm.setEnabled(false);//默认不可用
 
         iv_left.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,17 +87,32 @@ public class PictureSelectorActivity extends BaseActivity {
                 finish();
             }
         });
-        String title = "";
-        if (!TextUtils.isEmpty(title = ConfigManage.getInstance().getTitle()))
+        if (!TextUtils.isEmpty(title))
             tv_title.setText(title);
 
         rv_list.setAdapter(adapter);
         rv_list.setLayoutManager(layoutManager);
-
         //当知道Adapter内Item的改变不会影响RecyclerView宽高的时候，可以设置为true让RecyclerView避免重新计算大小。
         rv_list.setHasFixedSize(true);
         //设置划出屏幕后的缓存数
         rv_list.setItemViewCacheSize(60);
+        adapter.setOnTouchEventListener(new PictureSelectorAdapter.onTouchEventListener() {
+            @Override
+            public void onClick(int position) {
+
+            }
+
+            @Override
+            public void onCheck(int position) {
+                String str = "(" + CollectionManage.tempCount + "/" + optionalCount + ")";
+                if (CollectionManage.tempCount != 0)
+                    tv_confirm.setEnabled(true);
+                else
+                    tv_confirm.setEnabled(false);//本次未选择
+
+                tv_confirm.setText("确定" + (CollectionManage.tempCount != 0 ? str : ""));
+            }
+        });
 
         tv_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +197,7 @@ public class PictureSelectorActivity extends BaseActivity {
      * 返回调用页面
      */
     private void toBack() {
+        CollectionManage.getInstance().addTempToList();
         Intent intent = new Intent();
         intent.putStringArrayListExtra(PictureSelector.SELECT_ITEM, CollectionManage.getInstance().getArrayList());
         setResult(RESULT_OK, intent);
@@ -186,6 +207,7 @@ public class PictureSelectorActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CollectionManage.getInstance().cleanArrayList();
+        CollectionManage.tempCount = 0;
+        CollectionManage.getInstance().cleanTempArrayList();
     }
 }

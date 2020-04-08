@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.pictureselector.adapter.MainAdapter;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pictureselect.PictureSelector;
+import pictureselect.manage.CollectionManage;
 
 /**
  * @ClassName MainActivity
@@ -52,9 +52,7 @@ public class MainActivity extends AppCompatActivity {
         tv_picture_selector.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                PictureSelector.getInstance()
-                        .setShowImage(false)
-                        .setShowVideo(false)
+                PictureSelector.getInstance().setMaxCount(9)
                         .start(MainActivity.this, REQUEST_SELECTOR);
                 return false;
             }
@@ -86,5 +84,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CollectionManage.getInstance().cleanArrayList();
     }
 }

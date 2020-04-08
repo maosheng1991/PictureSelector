@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pictureselect.manage.CollectionManage;
+import pictureselect.manage.ConfigManage;
 import pictureselect.media.MediaFile;
+import pictureselect.util.ToastUtil;
 import pictureselect.view.SquareImageView;
 
 /**
@@ -52,6 +54,7 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
 
         Glide.with(context).load(mediaFiles.get(i).getPath()).into(imageHolder.iv_content);
 
+        //点击
         imageHolder.iv_content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +64,7 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
             }
         });
 
+        //选中
         imageHolder.iv_item_check.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -68,10 +72,15 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_UP:
                         if (!mediaFiles.get(i).isCheck()) {//未被选中
-                            if (CollectionManage.getInstance().addFilePathToCollect(mediaFiles.get(i).getPath())) {
-                                imageHolder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_checked));
-                                mediaFiles.get(i).setCheck(true);
-                                notifyItemChanged(i);
+
+                            if ((CollectionManage.getInstance().getArrayList().size() + CollectionManage.tempCount) < ConfigManage.getInstance().getMaxCount()) {
+                                if (CollectionManage.getInstance().addFilePathToCollect(mediaFiles.get(i).getPath())) {
+                                    imageHolder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_checked));
+                                    mediaFiles.get(i).setCheck(true);
+                                    notifyItemChanged(i);
+                                }
+                            } else {
+                                ToastUtil.show(context, "最多可以选择" + ConfigManage.getInstance().getMaxCount() + "个文件！");
                             }
                         } else {
                             if (CollectionManage.getInstance().deletePathFromCollect(mediaFiles.get(i).getPath())) {
@@ -84,6 +93,7 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
                         if (onTouchEventListener != null) {
                             onTouchEventListener.onCheck(i);
                         }
+
                 }
                 return true;
             }

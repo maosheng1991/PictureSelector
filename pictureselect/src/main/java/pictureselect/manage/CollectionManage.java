@@ -13,6 +13,8 @@ public class CollectionManage {
 
     private List<String> list = new ArrayList<>();
     private static CollectionManage collectionManage;
+    public static int tempCount = 0;//单独记录每次选择的数量，退出时重置
+    public List<String> tempList = new ArrayList<>();//记录每次选择的图片集合，退出时重置
 
     public CollectionManage() {
 
@@ -43,7 +45,8 @@ public class CollectionManage {
      * @return
      */
     public boolean addFilePathToCollect(String path) {
-        return list.add(path);
+        tempCount++;
+        return tempList.add(path);
     }
 
     /**
@@ -53,7 +56,8 @@ public class CollectionManage {
      * @return
      */
     public boolean deletePathFromCollect(String path) {
-        return list.remove(path);
+        tempCount--;
+        return tempList.remove(path);
     }
 
     /**
@@ -67,6 +71,21 @@ public class CollectionManage {
             arrayList.add(s);
         }
         return arrayList;
+    }
+
+    /**
+     * 将记录每次的选择的集合添加到主集合中
+     */
+    public void addTempToList() {
+        for (String path : tempList)
+            list.add(path);
+    }
+
+    /**
+     * 清除临时list
+     */
+    public void cleanTempArrayList() {
+        tempList.clear();
     }
 
     /**
