@@ -99,7 +99,7 @@ public class PictureSelectorActivity extends BaseActivity {
         adapter.setOnTouchEventListener(new PictureSelectorAdapter.onTouchEventListener() {
             @Override
             public void onClick(int position) {
-
+                PicturePreImgActivity.startPicturePreImgActivity(PictureSelectorActivity.this, position);
             }
 
             @Override
@@ -166,6 +166,7 @@ public class PictureSelectorActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    CollectionManage.getInstance().setAllList(list);
                     adapter.setMediaFiles(list);
                 }
             });

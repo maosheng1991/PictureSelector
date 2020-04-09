@@ -14,5 +14,8 @@
         <activity
             android:name="pictureselect.activity.PictureSelectorActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="pictureselect.activity.PicturePreImgActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>
