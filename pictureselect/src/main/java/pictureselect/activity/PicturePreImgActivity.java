@@ -111,5 +111,6 @@ public class PicturePreImgActivity extends BaseActivity {
     private void updateTvLeftTitle(int position) {
         tv_left.setVisibility(View.VISIBLE);
         tv_left.setText(String.format("%d/%d", position + 1, list.size()));
+        //dev
     }
 }
