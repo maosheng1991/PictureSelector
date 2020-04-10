@@ -73,20 +73,20 @@ public class PicturePreImgActivity extends BaseActivity {
 
         rv_img_page.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-            //滑动页面时调用，有三个参数 var1当前页面、var2偏移比例、var3滑动像素
+            //滑动页面时调用，有三个参数 position当前页面、v偏移比例、il滑动像素
             @Override
             public void onPageScrolled(int position, float v, int i1) {
 
             }
 
-            //进入一个新的页面调用这个方法，var1当前位于哪个页面。
+            //进入一个新的页面调用这个方法，position当前位于哪个页面。
             @Override
             public void onPageSelected(int position) {
                 updateTvLeftTitle(position);
             }
 
             //滑动状态更改时调用
-            //var1：有三个状态，1按下时调用，抬起时如果发生了滑动值会变为2（不发生滑动不会有2），滑动结束时变为0
+            //position：有三个状态，1按下时调用，抬起时如果发生了滑动值会变为2（不发生滑动不会有2），滑动结束时变为0
             @Override
             public void onPageScrollStateChanged(int position) {
 
@@ -111,6 +111,5 @@ public class PicturePreImgActivity extends BaseActivity {
     private void updateTvLeftTitle(int position) {
         tv_left.setVisibility(View.VISIBLE);
         tv_left.setText(String.format("%d/%d", position + 1, list.size()));
-        //bbbbbbbbbbbbbbb
     }
 }
