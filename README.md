@@ -38,7 +38,7 @@ PictureSelector.getInstance()
 ```cpp
 @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_SELECTOR && resultCode == RESULT_OK) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
            ArrayList<String> arrayList = data.getStringArrayListExtra(PictureSelector.SELECT_ITEM);
         }
     }
