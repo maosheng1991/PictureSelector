@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.pictureselect.R;
@@ -18,6 +19,8 @@ import java.util.List;
 import pictureselect.manage.CollectionManage;
 import pictureselect.manage.ConfigManage;
 import pictureselect.media.MediaFile;
+import pictureselect.media.MediaType;
+import pictureselect.util.MediaUtil;
 import pictureselect.util.ToastUtil;
 import pictureselect.view.SquareImageView;
 
@@ -38,24 +41,34 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_image_item, viewGroup, false);
-        return new ImageHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int itemType) {
+        if (itemType == MediaType.ITEM_TYPE_IMAGE) {
+            View view = LayoutInflater.from(context).inflate(R.layout.layout_image_item, viewGroup, false);
+            return new ImageHolder(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.layout_video_item, viewGroup, false);
+            return new VideoHolder(view);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
-        final ImageHolder imageHolder = (ImageHolder) viewHolder;
+        int itemType = getItemViewType(i);
+        final MediaHolder holder;
+        if (itemType == MediaType.ITEM_TYPE_IMAGE)
+            holder = (ImageHolder) viewHolder;
+        else
+            holder = (VideoHolder) viewHolder;
 
         if (!mediaFiles.get(i).isCheck())
-            imageHolder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_check));
+            holder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_check));
         else
-            imageHolder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_checked));
+            holder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_checked));
 
-        Glide.with(context).load(mediaFiles.get(i).getPath()).into(imageHolder.iv_content);
+        Glide.with(context).load(mediaFiles.get(i).getPath()).into(holder.iv_content);
 
         //点击
-        imageHolder.iv_content.setOnClickListener(new View.OnClickListener() {
+        holder.iv_content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onTouchEventListener != null) {
@@ -65,7 +78,7 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
         });
 
         //选中
-        imageHolder.iv_item_check.setOnTouchListener(new View.OnTouchListener() {
+        holder.iv_item_check.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -75,7 +88,7 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
 
                             if ((CollectionManage.getInstance().getArrayList().size() + CollectionManage.tempCount) < ConfigManage.getInstance().getMaxCount()) {
                                 if (CollectionManage.getInstance().addFilePathToCollect(mediaFiles.get(i).getPath())) {
-                                    imageHolder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_checked));
+                                    holder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_checked));
                                     mediaFiles.get(i).setCheck(true);
                                     notifyItemChanged(i);
                                 }
@@ -84,7 +97,7 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
                             }
                         } else {
                             if (CollectionManage.getInstance().deletePathFromCollect(mediaFiles.get(i).getPath())) {
-                                imageHolder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_check));
+                                holder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_check));
                                 mediaFiles.get(i).setCheck(false);
                                 notifyItemChanged(i);
                             }
@@ -98,6 +111,15 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
                 return true;
             }
         });
+
+        //如果是视频，显示时长
+        if (holder instanceof VideoHolder)
+            ((VideoHolder) holder).tv_video_time.setText(MediaUtil.getVideoDuration(mediaFiles.get(i).getDuration()));
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return MediaUtil.getMediaType(mediaFiles.get(position));
     }
 
     @Override
@@ -105,13 +127,39 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
         return mediaFiles.size();
     }
 
-    class ImageHolder extends RecyclerView.ViewHolder {
+    /**
+     * \
+     * 图片
+     */
+    class ImageHolder extends MediaHolder {
 
+        public ImageHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+    }
+
+
+    /**
+     * 视频
+     */
+    class VideoHolder extends MediaHolder {
+
+        TextView tv_video_time;
+
+        public VideoHolder(@NonNull View itemView) {
+            super(itemView);
+            tv_video_time = itemView.findViewById(R.id.tv_video_time);
+        }
+    }
+
+    /**
+     * 媒体类文件
+     */
+    class MediaHolder extends RecyclerView.ViewHolder {
         SquareImageView iv_content;
         ImageView iv_item_check;
 
-
-        public ImageHolder(@NonNull View itemView) {
+        public MediaHolder(@NonNull View itemView) {
             super(itemView);
             iv_content = itemView.findViewById(R.id.iv_content);
             iv_item_check = itemView.findViewById(R.id.iv_item_check);
