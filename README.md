@@ -14,7 +14,7 @@ allprojects {
 步骤二、 添加依赖
 
 ```cpp
-dependencies { implementation 'com.github.ytf12138:PictureSelector:v1.1' }
+dependencies { implementation 'com.github.ytf12138:PictureSelector:v1.2' }
 ```
 
 在代码中的调用：
