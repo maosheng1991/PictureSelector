@@ -1,8 +1,10 @@
 package pictureselect.util;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import pictureselect.application.MyApplication;
 import pictureselect.media.MediaFile;
 import pictureselect.media.MediaType;
 
@@ -44,5 +46,14 @@ public class MediaUtil {
             return MediaType.ITEM_TYPE_VIDEO;
         else
             return MediaType.ITEM_TYPE_IMAGE;
+    }
+
+    /**
+     * 获取共享文件路径
+     *
+     * @return
+     */
+    public static String getFileProviderPath() {
+        return MyApplication.getApplication().getProviderPath();
     }
 }

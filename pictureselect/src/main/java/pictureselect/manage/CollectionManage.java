@@ -36,6 +36,15 @@ public class CollectionManage {
     }
 
     /**
+     * 决定能否继续选择
+     *
+     * @return
+     */
+    public boolean isCanChoose() {
+        return (list.size() + tempCount) < ConfigManage.getInstance().getMaxCount();
+    }
+
+    /**
      * 添加文件路径到记录每次选择图片的集合
      *
      * @param path
