@@ -130,7 +130,7 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
                                 if (CollectionManage.getInstance().addFilePathToCollect(mediaFiles.get(i).getPath())) {
                                     holder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_checked));
                                     mediaFiles.get(i).setCheck(true);
-                                    notifyItemChanged(i);
+//                                    notifyItemChanged(i);
                                 }
                             } else {
                                 ToastUtil.show(context, "最多可以选择" + ConfigManage.getInstance().getMaxCount() + "个文件！");
@@ -139,7 +139,7 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
                             if (CollectionManage.getInstance().deletePathFromCollect(mediaFiles.get(i).getPath())) {
                                 holder.iv_item_check.setImageDrawable(context.getResources().getDrawable(R.mipmap.icon_image_check));
                                 mediaFiles.get(i).setCheck(false);
-                                notifyItemChanged(i);
+//                                notifyItemChanged(i);
                             }
                         }
 
@@ -165,8 +165,13 @@ public class PictureSelectorAdapter extends RecyclerView.Adapter {
      */
     @Override
     public int getItemViewType(int position) {
-        if (ConfigManage.getInstance().isShowCamera() && position == 0)
-            return MediaType.ITEM_TYPE_CAMERA;
+        if (ConfigManage.getInstance().isShowCamera()) {
+            if (position == 0)
+                return MediaType.ITEM_TYPE_CAMERA;
+            else
+                return MediaUtil.getMediaType(mediaFiles.get(position - 1));
+        }
+
         return MediaUtil.getMediaType(mediaFiles.get(position));
     }
 
